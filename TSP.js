@@ -1,10 +1,12 @@
 let graph = [
     [0 , 10, 15, 20, 1],
-    [10, 0 , 35, -1, 1],
+    [10, 0 , 35, 10, 1],
     [15, 35, 0 , 30, 1],
-    [20, -1, 30, 0 , 1],
+    [20, 10, 30, 0 , 1],
     [1 , 1 , 1 , 1 , 0]
 ];
+
+const HIGH = 100000000000;
 
 function getDistanceBetween(from, to)
 {
@@ -108,6 +110,126 @@ function getShortestRoute()
 
     return route;
 }
+
+let map = {};
+
+function getKey(arr, i)
+{
+    if (arr.indexOf(0) < 0) throw new Error();
+    if (arr.indexOf(i) < 0) throw new Error();
+    return "" + arr + " : " + i;
+}
+
+function getVal(arr, i)
+{
+    var key = getKey(arr, i);
+    if (arr.length === 2) return [0, i];
+    return map[key];
+}
+
+function setVal(arr, i, value)
+{
+    map[getKey(arr, i)] = value;
+}
+
+// 0 is an implicit member of arr
+function C(arr)
+{
+    arr = [0,1,2,3,4];
+    setVal([0], 0, [0]);
+
+    for (let subsetSize = 2; subsetSize <= arr.length; subsetSize++)
+    {
+        calcSubsetsOfSize(arr, subsetSize);
+    }
+    console.log(map);
+    /*let minLength = HIGH;
+
+    for (let k = 0; k < arr.length; k++)
+    {
+        let i = arr[k];
+
+        // Remove i, because that is an implicit member
+        let newArray = arrayWithoutElementAtIndex(arr, k);
+
+        let dist = C(newArray, i) + getDistanceBetween(i, j);
+        if (minLength < dist) continue;
+        minLength = dist;
+    }
+    return minLength;*/
+}
+
+function calcSubsetsOfSize(arr, subsetSize)
+{
+    // Get all the subsets of a specific size
+    let subsets = getAllSubsetsOfSize(arr, subsetSize);
+    subsets = subsets.filter(set => set.indexOf(0) >= 0); // Must contain 0
+
+    for (let counter1 = 0; counter1 < subsets.length; counter1++)
+    {
+        let subset = subsets[counter1];
+        calcForSubset(subset);
+    }
+}
+
+function calcForSubset(subset)
+{
+    //setVal(subset, 0, []); // There is no going from this subset to point 0
+
+    for (let counter1 = 0; counter1 < subset.length; counter1++)
+    {
+        let j = subset[counter1]; // j is just one option from the subset
+
+
+        if (j === 0) continue;
+        // Get the set without the city j, so to find the shortest route there
+        let newSubset = subset.filter(element => element !== j);
+
+
+        // And now find the solutions that starts in 0 goes through the new set (without j)
+        // then goes to i and then to j
+        // And choose the one with the lowest value
+
+        let minLength = HIGH;
+        let minRoute = undefined;
+
+        for (let counter2 = 0; counter2 < newSubset.length; counter2++)
+        {
+            let i = newSubset[counter2];
+            if (i === 0) continue;
+
+            console.log("newSubset: " + newSubset + " i: " + i);
+
+            let route = getVal(newSubset, i);
+            console.log("route: " + route);
+            let newRoute = route.slice();
+            newRoute[newRoute.length] = j;
+
+            let length = getDistanceSubRoute(newRoute);
+            if (length > minLength) continue;
+            minLength = length;
+            minRoute = newRoute;
+        }
+        //let minLength = newSubset.map(i => getVal(newSubset, i) + getDistanceBetween(i,j))
+          //  .reduce((a,b) => Math.min(a,b), HIGH);
+        console.log("subset: " + subset + " j: " + j + " minRoute: " + minRoute)
+        setVal(subset, j, minRoute);
+    }
+}
+
+
+function getAllSubsetsOfSize(arr, size)
+{
+
+    return arr.reduce(
+            (subsets, value) => subsets.concat(
+                subsets.map(set => [...set,value])
+            ),
+            [[]]
+        ).filter(a => a.length == size);
+}
+
+C(undefined);
 
 console.log(getShortestRoute());
 console.log(getDistanceWholeRoute(getShortestRoute()));
