@@ -85,6 +85,10 @@ function arrayWithoutElementAtIndex  (arr, index)
     });
 }
 
+// this function makes use of brute-force
+// So it is not efficient and it is just used to compare results
+// with the faster solution
+// I am more certain this one works, although it might not work on larger graphs.
 function getShortestRoute()
 {
     let baseArray = [];
@@ -93,10 +97,20 @@ function getShortestRoute()
         baseArray[i] = i;
     }
 
-    let length = 10000000;
+    let length = HIGH;
     let route = baseArray;
 
-    let permutations = getPermutations(baseArray);
+    let permutations = [];
+    let tempPermutations = getPermutations([1,2,3,4]);
+
+    // Combine those and add them to the return
+    for (let j = 0; j < tempPermutations.length; j++)
+    {
+        let permutation = tempPermutations[j];
+        permutation.unshift(0);
+        permutations[permutations.length] = permutation;
+    }
+
     for (let i = 0; i < permutations.length; i++)
     {
         let permutation = permutations[i];
@@ -111,18 +125,26 @@ function getShortestRoute()
     return route;
 }
 
+// This javascript object is used like a hashtable
+// It stores the optimal route for different sets and different endings
 let map = {};
 
+// This one creates a unique string for each array (set) and ending
 function getKey(arr, i)
 {
-    if (arr.indexOf(0) < 0) throw new Error();
-    if (arr.indexOf(i) < 0) throw new Error();
+    if (arr.indexOf(0) !== 0) throw new Error(); // Assertion - should not happen
+    if (arr.indexOf(i) < 0) throw new Error(); // Assertion - should not happen
     return "" + arr + " : " + i;
 }
 
 function getVal(arr, i)
 {
+    // The key is gotten here, so the assertions are performed
     var key = getKey(arr, i);
+
+    // For graphs with just two vertices there is only one solution
+    // Also because this solution is recursive (solutions for sets sized n, are based on solutions for sets sized n-1)
+    // This serves as the end point.
     if (arr.length === 2) return [0, i];
     return map[key];
 }
@@ -132,56 +154,62 @@ function setVal(arr, i, value)
     map[getKey(arr, i)] = value;
 }
 
-// 0 is an implicit member of arr
-function C(arr)
+// Gets solutions for all vertices and all possible end cities
+// and returns the one that has the shortest overall route
+function getShortestRouteDynamic()
 {
-    arr = [0,1,2,3,4];
-    setVal([0], 0, [0]);
+    // Get the base array
+    let baseArray = getBaseArray();
 
+    let minLength = HIGH;
+    let minRoute = undefined;
+
+    for (let i = 1; i < graph.length; i++)
+    {
+        let route = getVal(baseArray, i);
+        let length = getDistanceWholeRoute(route);
+
+        if (length > minLength) continue;
+        minLength = length;
+        minRoute = route;
+    }
+
+    return minRoute;
+}
+
+function calculateGraphRoutes(arr)
+{
+    // Loops through all possible set sizes
+    // Starts at 2, because a route can't be made between 0 or 1 city.
+    // And starts with the lower set sizes because the larger set sizes are based on those.
     for (let subsetSize = 2; subsetSize <= arr.length; subsetSize++)
     {
         calcSubsetsOfSize(arr, subsetSize);
     }
-    console.log(map);
-    /*let minLength = HIGH;
-
-    for (let k = 0; k < arr.length; k++)
-    {
-        let i = arr[k];
-
-        // Remove i, because that is an implicit member
-        let newArray = arrayWithoutElementAtIndex(arr, k);
-
-        let dist = C(newArray, i) + getDistanceBetween(i, j);
-        if (minLength < dist) continue;
-        minLength = dist;
-    }
-    return minLength;*/
 }
 
 function calcSubsetsOfSize(arr, subsetSize)
 {
-    // Get all the subsets of a specific size
+    // Get all the subsets with a specific size.
     let subsets = getAllSubsetsOfSize(arr, subsetSize);
-    subsets = subsets.filter(set => set.indexOf(0) >= 0); // Must contain 0
 
-    for (let counter1 = 0; counter1 < subsets.length; counter1++)
-    {
-        let subset = subsets[counter1];
-        calcForSubset(subset);
-    }
+    // They must also all start at 0
+    subsets = subsets.filter(set => set.indexOf(0) >= 0);
+
+    subsets.forEach(subset => calcForSubset(subset));
 }
 
+// This one calculates and stores all the optimal routes
+// That start in 0 and ends in each of the elements in the array
 function calcForSubset(subset)
 {
-    //setVal(subset, 0, []); // There is no going from this subset to point 0
-
     for (let counter1 = 0; counter1 < subset.length; counter1++)
     {
-        let j = subset[counter1]; // j is just one option from the subset
+        // Consider the options where the route end in j
+        let j = subset[counter1];
 
+        if (j === 0) continue; // Since we start at 0, we can't also end there
 
-        if (j === 0) continue;
         // Get the set without the city j, so to find the shortest route there
         let newSubset = subset.filter(element => element !== j);
 
@@ -198,39 +226,45 @@ function calcForSubset(subset)
             let i = newSubset[counter2];
             if (i === 0) continue;
 
-            console.log("newSubset: " + newSubset + " i: " + i);
-
+            // Get the route from 0 to i that goes through all the cities
             let route = getVal(newSubset, i);
-            console.log("route: " + route);
             let newRoute = route.slice();
-            newRoute[newRoute.length] = j;
+            newRoute[newRoute.length] = j; // And add j to the new route
 
+            // And store this route if it is the shortest
             let length = getDistanceSubRoute(newRoute);
             if (length > minLength) continue;
             minLength = length;
             minRoute = newRoute;
         }
         //let minLength = newSubset.map(i => getVal(newSubset, i) + getDistanceBetween(i,j))
-          //  .reduce((a,b) => Math.min(a,b), HIGH);
-        console.log("subset: " + subset + " j: " + j + " minRoute: " + minRoute)
+        //  .reduce((a,b) => Math.min(a,b), HIGH);
         setVal(subset, j, minRoute);
     }
 }
 
-
 function getAllSubsetsOfSize(arr, size)
 {
-
     return arr.reduce(
-            (subsets, value) => subsets.concat(
-                subsets.map(set => [...set,value])
-            ),
-            [[]]
-        ).filter(a => a.length == size);
+        (subsets, value) => subsets.concat(
+            subsets.map(set => [...set,value])
+        ),
+        [[]]
+    ).filter(a => a.length == size);
 }
 
-C(undefined);
+function getBaseArray()
+{
+    let baseArray = [];
+    for (let i = 0; i < graph.length; i++)
+    {
+        baseArray[i] = i;
+    }
+    return baseArray;
+}
+
+calculateGraphRoutes(getBaseArray());
 
 console.log(getShortestRoute());
-console.log(getDistanceWholeRoute(getShortestRoute()));
+console.log(getShortestRouteDynamic());
 
