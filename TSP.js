@@ -23,6 +23,35 @@ function getBaseArray()
 }
 
 //
+//  LOAD FROM WEBSITE
+//
+
+document.querySelector("#send").addEventListener("click", loadWeb);
+
+function loadWeb() {
+
+    let by1 = document.querySelector("#by1").value;
+    let by2 = document.querySelector("#by2").value;
+    let afstand = document.querySelector("#afstand").value;
+
+    // Must be ints
+    // Probably should do some checks here
+    by1 = parseInt(by1);
+    by2 = parseInt(by2);
+    afstand = parseInt(afstand);
+
+    // Load onto the graph
+    graph[by1][by2] = afstand;
+
+    calculateGraphRoutes(getBaseArray());
+    let route = getShortestRouteDynamic();
+    let length = getDistanceWholeRoute(route);
+
+    document.querySelector("#resultat").innerHTML = "Graf: " + JSON.stringify(graph) + "<br> Rute: " + JSON.stringify(route) + "<br>Længde: " + length;
+}
+
+
+//
 //  CALCULATE DISTANCES
 //
 
