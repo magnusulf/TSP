@@ -19,8 +19,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TSP.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
-              <caret line="187" column="5" selection-start-line="187" selection-start-column="5" selection-end-line="187" selection-end-column="5" />
+            <state relative-caret-position="311">
+              <caret line="219" lean-forward="true" selection-start-line="219" selection-end-line="219" />
             </state>
           </provider>
         </entry>
@@ -123,12 +123,13 @@
       <option name="presentableId" value="Default" />
       <updated>1552991303851</updated>
       <workItem from="1552991308531" duration="9956000" />
-      <workItem from="1553084610736" duration="9364000" />
+      <workItem from="1553084610736" duration="9709000" />
+      <workItem from="1553174088985" duration="541000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="19320000" />
+    <option name="totallyTimeSpent" value="20206000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="140" y="23" width="1400" height="1019" extended-state="0" />
@@ -139,7 +140,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.27508092" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.27508092" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.27831715" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -178,8 +179,8 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/TSP.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="187" column="5" selection-start-line="187" selection-start-column="5" selection-end-line="187" selection-end-column="5" />
+        <state relative-caret-position="311">
+          <caret line="219" lean-forward="true" selection-start-line="219" selection-end-line="219" />
         </state>
       </provider>
     </entry>

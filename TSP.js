@@ -1,12 +1,12 @@
 let graph = [
     [0 , 10, 15, 20, 1],
-    [10, 0 , 35, 10, 1],
-    [15, 35, 0 , 30, 1],
-    [20, 10, 30, 0 , 1],
-    [1 , 1 , 1 , 1 , 0]
+    [1000, 0 , 35, 10, 1],
+    [1000, 1000, 0 , 30, 1],
+    [1000, 1000, 1000, 0 , 1],
+    [1000 , 1000 , 1000 , 1000 , 0]
 ];
 
-const HIGH = 100000000000;
+const HIGH = 9007199254740992; // The largest integer in javascript
 
 function getDistanceBetween(from, to)
 {
@@ -217,7 +217,7 @@ function calcForSubset(subset)
         // And now find the solutions that starts in 0 goes through the new set (without j)
         // then goes to i and then to j
         // And choose the one with the lowest value
-
+    
         let minLength = HIGH;
         let minRoute = undefined;
 
