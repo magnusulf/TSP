@@ -1,3 +1,5 @@
+
+// The graph
 let graph = [
     [0 , 10, 15, 20, 1],
     [1000, 0 , 35, 10, 1],
@@ -7,6 +9,20 @@ let graph = [
 ];
 
 const HIGH = 9007199254740992; // The largest integer in javascript
+
+function getBaseArray()
+{
+    let baseArray = [];
+    for (let i = 0; i < graph.length; i++)
+    {
+        baseArray[i] = i;
+    }
+    return baseArray;
+}
+
+//
+//  CALCULATE DISTANCES
+//
 
 function getDistanceBetween(from, to)
 {
@@ -46,6 +62,10 @@ function getDistanceWholeRoute(cities)
 
     return getDistanceSubRoute(newRoute);
 }
+
+//
+//  BRUTE FORCE METHOD
+//
 
 // This method returns an array of arrays
 function getPermutations(array)
@@ -89,7 +109,7 @@ function arrayWithoutElementAtIndex  (arr, index)
 // So it is not efficient and it is just used to compare results
 // with the faster solution
 // I am more certain this one works, although it might not work on larger graphs.
-function getShortestRoute()
+function getShortestRouteBruteForce()
 {
     let baseArray = [];
     for (let i = 0; i < graph.length; i++)
@@ -124,6 +144,10 @@ function getShortestRoute()
 
     return route;
 }
+
+//
+//  DYNAMIC METHOD
+//
 
 // This javascript object is used like a hashtable
 // It stores the optimal route for different sets and different endings
@@ -243,6 +267,8 @@ function calcForSubset(subset)
     }
 }
 
+// Gotten from stackoverflow
+// https://stackoverflow.com/questions/42773836/how-to-find-all-subsets-of-a-set-in-javascript
 function getAllSubsetsOfSize(arr, size)
 {
     return arr.reduce(
@@ -253,18 +279,8 @@ function getAllSubsetsOfSize(arr, size)
     ).filter(a => a.length == size);
 }
 
-function getBaseArray()
-{
-    let baseArray = [];
-    for (let i = 0; i < graph.length; i++)
-    {
-        baseArray[i] = i;
-    }
-    return baseArray;
-}
-
 calculateGraphRoutes(getBaseArray());
 
-console.log(getShortestRoute());
+console.log(getShortestRouteBruteForce());
 console.log(getShortestRouteDynamic());
 
