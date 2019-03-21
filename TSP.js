@@ -1,3 +1,5 @@
+// Hej Jakob, og evt. censor, undskyld at alle kommentarerne er på engelsk
+// Men jeg er så vant til at skrive kode på engelsk, at jeg helt instinktivt brugte engelsk
 
 // The graph
 let graph = [
