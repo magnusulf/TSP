@@ -272,7 +272,7 @@ function calcForSubset(subset)
         // And now find the solutions that starts in 0 goes through the new set (without j)
         // then goes to i and then to j
         // And choose the one with the lowest value
-    
+
         let minLength = HIGH;
         let minRoute = undefined;
 
@@ -309,9 +309,3 @@ function getAllSubsetsOfSize(arr, size)
         [[]]
     ).filter(a => a.length == size);
 }
-
-calculateGraphRoutes(getBaseArray());
-
-console.log(getShortestRouteBruteForce());
-console.log(getShortestRouteDynamic());
-
